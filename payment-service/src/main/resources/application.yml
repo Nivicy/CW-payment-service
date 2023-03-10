@@ -1,0 +1,53 @@
+server:
+    port: 9090
+    servlet:
+        context-path: /cw
+spring :
+    batch:
+        initialize-schema: ALWAYS
+        job:
+            enabled: false
+    cache:
+        type: redis
+    datasource:
+        payment:
+            driver-class: org.postgresql.Driver
+            jdbc-url: jdbc:postgresql://localhost:5432/cw_payment
+            username: postgres
+            password: password
+        product:
+            driver-class: org.postgresql.Driver
+            jdbc-url: jdbc:postgresql://localhost:5432/cw_product
+            username: postgres
+            password: password
+    jpa:
+        show-sql: true
+        generate-ddl: true
+        hibernate.ddl-auto: create
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.PostgreSQLDialect
+    kafka:
+        bootstrap-servers: 192.168.31.76:9092
+        topic: ecom
+        consumer:
+            group:
+                a: timHore
+                b: timPekerjaKeras
+    redis:
+        database: 0
+        host: 192.168.31.76
+        port: 6379
+        username: nivicy
+        password: somepassword
+        timeout: 6000000
+
+integration:
+    wira-project:
+        main:
+            base-url: http://192.168.18.15:8080
+            call-main:
+                url: ${integration.wira-project.main.base-url}/hello
+
+jasypt:
+    passwordEncrypt: password
