@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "product_detail")
+@Table(name = "product_detail", schema = "cw")
 public class ProductDetail implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid")
