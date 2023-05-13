@@ -1,38 +1,35 @@
 package id.com.cw.paymentservice.configuration;
 
+import id.com.cw.paymentservice.configuration.properties.AdaptorConfigProperty;
 import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.binder.httpcomponents.PoolingHttpClientConnectionManagerMetricsBinder;
-import lombok.extern.log4j.Log4j2;
+import lombok.RequiredArgsConstructor;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
-@Log4j2
+@RequiredArgsConstructor
 public class AdaptorConfiguration {
 
-    @Autowired
-    private MeterRegistry meterRegistry;
-
+    private final AdaptorConfigProperty adaptorConfigProperty;
 
     @Bean(name = "restTemplate")
-    public RestTemplate restTemplate() {
-        RestTemplate restTemplate = new RestTemplate(customHttpRequestFactory());
+    public RestTemplate restTemplate(MeterRegistry meterRegistry) {
+        RestTemplate restTemplate = new RestTemplate(customHttpRequestFactory(meterRegistry));
 
         return restTemplate;
     }
 
     @Bean
-    public HttpComponentsClientHttpRequestFactory customHttpRequestFactory() {
+    public HttpComponentsClientHttpRequestFactory customHttpRequestFactory(MeterRegistry meterRegistry) {
         HttpComponentsClientHttpRequestFactory httpComponentsClientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory(httpClient());
-        httpComponentsClientHttpRequestFactory.setConnectionRequestTimeout(1000000);
-        httpComponentsClientHttpRequestFactory.setReadTimeout(1000000);
-        httpComponentsClientHttpRequestFactory.setConnectTimeout(1000000);
+        httpComponentsClientHttpRequestFactory.setConnectionRequestTimeout(adaptorConfigProperty.getConnectionRequestTimeout());
+        httpComponentsClientHttpRequestFactory.setReadTimeout(adaptorConfigProperty.getReadTimeout());
+        httpComponentsClientHttpRequestFactory.setConnectTimeout(adaptorConfigProperty.getConnectTimeout());
         return httpComponentsClientHttpRequestFactory;
     }
 
@@ -40,9 +37,8 @@ public class AdaptorConfiguration {
     public CloseableHttpClient httpClient(){
         PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
         CloseableHttpClient defaultHttpClient = HttpClientBuilder.create().setConnectionManager(connectionManager).build();
-        connectionManager.setMaxTotal(1000000);
-        connectionManager.setDefaultMaxPerRoute(100);
-        new PoolingHttpClientConnectionManagerMetricsBinder(connectionManager, "nivicy-pool").bindTo(meterRegistry);
+        connectionManager.setMaxTotal(adaptorConfigProperty.getMaxTotalConnections());
+        connectionManager.setDefaultMaxPerRoute(adaptorConfigProperty.getDefaultMaxConnectionsPerRoute());
         return defaultHttpClient;
     }
 }

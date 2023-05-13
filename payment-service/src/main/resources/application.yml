@@ -1,7 +1,7 @@
 server:
     port: 9090
     servlet:
-        context-path: /cw
+        context-path: ${var.common.server.servlet.context-path}
 spring :
     batch:
         initialize-schema: ALWAYS
@@ -12,14 +12,14 @@ spring :
     datasource:
         payment:
             driver-class: org.postgresql.Driver
-            jdbc-url: jdbc:postgresql://localhost:5432/cw_payment
-            username: postgres
-            password: password
+            jdbc-url: ${var.datasource.payment.url}
+            username: ${var.datasource.payment.username}
+            password: ${var.datasource.payment.password}
         product:
             driver-class: org.postgresql.Driver
-            jdbc-url: jdbc:postgresql://localhost:5432/cw_product
-            username: postgres
-            password: password
+            jdbc-url: ${var.datasource.product.url}
+            username: ${var.datasource.product.username}
+            password: ${var.datasource.product.password}
     jpa:
         show-sql: true
         generate-ddl: true
@@ -28,7 +28,7 @@ spring :
             hibernate:
                 dialect: org.hibernate.dialect.PostgreSQLDialect
     kafka:
-        bootstrap-servers: 192.168.31.76:9092
+        bootstrap-servers: ${var.common.kafka.boostrap-servers}
         topic: ecom
         consumer:
             group:
@@ -36,19 +36,24 @@ spring :
                 b: timPekerjaKeras
     redis:
         database: 0
-        host: 192.168.31.76
+        host: ${var.common.redis.host}
         port: 6379
-        username: nivicy
-        password: somepassword
+        username: ${var.common.redis.username}
+        password: ${var.common.redis.password}
         timeout: 6000000
 
 integration:
+    connect-timeout: 200000
+    read-timeout: 200000
+    max-total-connections: 200
+    default-max-connections-per-route: 100
+    connection-request-timeout: 2000
     user-service:
-        base-url: http://192.168.18.15:8080/user-service
+        base-url: ${var.integration.user.base-url}
         check-amount:
             url: ${integration.user-service.base-url}/user/v1/check-amount
         update-amount:
             url: ${integration.user-service.base-url}/user/v1/update-amount
 
 jasypt:
-    passwordEncrypt: password
+    passwordEncrypt: ${var.common.jasypt.password}

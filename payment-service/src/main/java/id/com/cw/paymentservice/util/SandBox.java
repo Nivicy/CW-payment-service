@@ -1,13 +1,29 @@
 package id.com.cw.paymentservice.util;
 
+import lombok.extern.log4j.Log4j2;
+
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Objects;
 
+@Log4j2
 public class SandBox {
-    public static void main(String[] args) {
-        Timestamp now = new Timestamp(System.currentTimeMillis());
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-        System.out.println(dateFormat.format(now));
+    public static void main(String[] args) throws Exception {
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-DD'T'hh:mm:ss:sssTZD");
+//        System.out.println(simpleDateFormat.format(Timestamp.valueOf(LocalDateTime.now())));
+
+        String merdeka = null;
+        System.out.println(Objects.requireNonNullElse(merdeka, "aaa"));
+    }
+
+    public static class Handuk {
+        private String kain;
+    }
+
+    public static void hitungHarga(Handuk handuk){
+        System.out.println(handuk + "?");
     }
 
     public static long toMilesPerHour(double kilometersPerHour) {
