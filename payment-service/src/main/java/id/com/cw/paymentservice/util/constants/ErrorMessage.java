@@ -1,5 +1,9 @@
 package id.com.cw.paymentservice.util.constants;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ErrorMessage {
 
     public static final String ERR_401_MSG = "Unauthorized";

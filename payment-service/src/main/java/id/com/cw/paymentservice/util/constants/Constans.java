@@ -1,5 +1,8 @@
 package id.com.cw.paymentservice.util.constants;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 public class Constans {
 
     public static final String STATUS_SUCCESS = "SUCCESS";

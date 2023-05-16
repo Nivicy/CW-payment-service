@@ -19,9 +19,7 @@ public class AdaptorConfiguration {
 
     @Bean(name = "restTemplate")
     public RestTemplate restTemplate(MeterRegistry meterRegistry) {
-        RestTemplate restTemplate = new RestTemplate(customHttpRequestFactory(meterRegistry));
-
-        return restTemplate;
+        return new RestTemplate(customHttpRequestFactory(meterRegistry));
     }
 
     @Bean
